@@ -15,3 +15,4 @@ func greetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // CI/CD pipeline we are using github action
+// actions -> automated task which run on some events

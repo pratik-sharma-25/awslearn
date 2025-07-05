@@ -6,23 +6,27 @@ name: Go
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
 
   build:
     runs-on: ubuntu-latest
+    
     steps:
-    - uses: actions/checkout@v4
+    - name: Pull code in github environment
+      uses: actions/checkout@v4
 
-    - name: Set up Go
+    - name: Set up Go into the environment
       uses: actions/setup-go@v4
       with:
-        go-version: '1.20'
+        go-version: '1.24'
 
-    - name: Build
-      run: go build -v ./...
+    - name: Docker login
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      
+    - name: Build docker image
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/awslearn .
 
-    - name: Test
-      run: go test -v ./...
+    - name: Push docker image
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/awslearn:latest
+
